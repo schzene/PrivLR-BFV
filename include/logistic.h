@@ -5,8 +5,9 @@
 
 #include "protocols/linear.h"
 #include "protocols/non-linear.h"
+#include "utils/he-tools.h"
 
-namespace PrivLR {
+namespace PrivLR_BFV {
     class Logistic {
         IOPack *io_pack = nullptr;
         Linear *linear = nullptr;
@@ -14,7 +15,7 @@ namespace PrivLR {
 
     public:
         vector<double> weight;
-        Logistic(int party, IOPack *io_pack);
+        Logistic(BFVKey* party, IOPack *io_pack);
         ~Logistic();
         void gradAscent(vector<vector<double>> &datas, vector<int> &label,
                         int max_cycles = 500, const double alpha = 0.001);

@@ -1,10 +1,11 @@
+#include "utils/he-tools.h"
 #include <protocols/linear.h>
+using namespace PrivLR_BFV;
 
 int main(int argc, const char **argv) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> dist(-1, 1);
-    std::uniform_real_distribution<> positive_dist(0, 1);
 
     int party_ = argv[1][0] - '0';
     if (party_ == ALICE) {
@@ -16,6 +17,8 @@ int main(int argc, const char **argv) {
                   << "\n";
     }
     IOPack *io_pack = new IOPack(party_);
+    BFVParm *parm = new BFVParm(8192, {60, 40, 40, 60}, default_prime_mod.at(29));
+    BFVKey *party = new BFVKey(party_, parm);
 
     size_t size = 10;
     size_t data_size = 20;
@@ -27,7 +30,7 @@ int main(int argc, const char **argv) {
         }
         in_b[i] = dist(gen);
     }
-    Linear *linear = new Linear(party_, io_pack);
+    Linear *linear = new Linear(party, io_pack);
     auto res = linear->dot_product(in_a, in_b, true);
 
     if (party_ == ALICE) {
@@ -50,9 +53,14 @@ int main(int argc, const char **argv) {
                 true_res[j] += (in_a[i][j] + in_a_a[i][j]) * (in_b[i] + in_b_a[i]);
             }
         }
-        std::cout << "error: " << "\n";
+        std::cout << "true_res: " << "\n";
         for (size_t j = 0; j < data_size; j++) {
-            cout << true_res[j] - res[j] - res_a[j] << "\n";
+            cout << true_res[j] << "\n";
+        }
+
+        std::cout << "res: " << "\n";
+        for (size_t j = 0; j < data_size; j++) {
+            cout << res[j] + res_a[j] << "\n";
         }
     }
 

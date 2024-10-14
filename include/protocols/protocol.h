@@ -1,7 +1,8 @@
 #ifndef PRIV_LR_PROTOCOL_H__
 #define PRIV_LR_PROTOCOL_H__
 
-#define BIT_LENGTH 31
+#define BIT_LENGTH 37
+#define SCALE 12
 
 #include <cassert>
 #include <random>
